@@ -1,3 +1,4 @@
+/*
 #include "Soundex.h"
 #include <cctype>
 
@@ -33,4 +34,55 @@ std::string generateSoundex(const std::string& name) {
     }
 
     return soundex;
+}
+*/
+
+#include "Soundex.h"
+#include <unordered_map>
+#include <cctype>
+
+char encodeChar(char c) {
+    static const std::unordered_map<char, char> soundex_map = {
+        {'B', '1'}, {'F', '1'}, {'P', '1'}, {'V', '1'},
+        {'C', '2'}, {'G', '2'}, {'J', '2'}, {'K', '2'},
+        {'Q', '2'}, {'S', '2'}, {'X', '2'}, {'Z', '2'},
+        {'D', '3'}, {'T', '3'}, {'L', '4'},
+        {'M', '5'}, {'N', '5'}, {'R', '6'}
+    };
+    
+    char upper_c = std::toupper(c);
+    auto it = soundex_map.find(upper_c);
+    return it != soundex_map.end() ? it->second : '0';
+}
+
+std::string removeConsecutiveDuplicates(const std::string& str) {
+    std::string result;
+    for (char c : str) {
+        if (result.empty() || result.back() != c) {
+            result += c;
+        }
+    }
+    return result;
+}
+
+std::string generateSoundex(const std::string& name) {
+    if (name.empty()) return "0000";
+
+    char first_letter = std::toupper(name[0]);
+
+    std::string encoded;
+    for (size_t i = 1; i < name.size(); ++i) {
+        char code = encodeChar(name[i]);
+        if (code != '0') {
+            encoded += code;
+        }
+    }
+
+    encoded = removeConsecutiveDuplicates(encoded);
+
+    std::string soundex_code = first_letter + encoded;
+    soundex_code = soundex_code.substr(0, 4);
+    soundex_code.resize(4, '0');
+
+    return soundex_code;
 }
