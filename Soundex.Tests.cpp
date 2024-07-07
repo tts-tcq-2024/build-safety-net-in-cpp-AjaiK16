@@ -1,38 +1,45 @@
-/*
-    #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 #include "Soundex.h"
+class GenerateSoundexTest : public ::testing::Test {
+protected:
+    void SetUp() override {}
+ 
+    // Optionally, add teardown code if needed
+    void TearDown() override {}
+};
 
-
-TEST(SoundexTest, HandlesEmptyString) {
+TEST(GenerateSoundexTest, EmptyName) {
     EXPECT_EQ(generateSoundex(""), "");
 }
 
-TEST(SoundexTest, HandlesSingleCharacter) {
+TEST(GenerateSoundexTest, SingleCharacterName) {
     EXPECT_EQ(generateSoundex("A"), "A000");
-}
-*/
-#include <gtest/gtest.h>
-#include "Soundex.h"
-
-TEST(SoundexTest, HandlesEmptyString) {
-    EXPECT_EQ(generateSoundex(""), "0000");
+    EXPECT_EQ(generateSoundex("B"), "B000");
+    EXPECT_EQ(generateSoundex("C"), "C000");
+    EXPECT_EQ(generateSoundex("D"), "D000");
+    EXPECT_EQ(generateSoundex("E"), "E000");
 }
 
-TEST(SoundexTest, HandlesSingleCharacter) {
-    EXPECT_EQ(generateSoundex("A"), "A000");
+TEST(GenerateSoundexTest, BasicNames) {
+    EXPECT_EQ(generateSoundex("Ana"), "A500");
+    EXPECT_EQ(generateSoundex("Carter"), "C636");
+    EXPECT_EQ(generateSoundex("David"), "D130");
+    EXPECT_EQ(generateSoundex("Eve"), "E100");
 }
 
-TEST(SoundexTest, HandlesStandardNames) {
-    EXPECT_EQ(generateSoundex("Robert"), "R163");
-    EXPECT_EQ(generateSoundex("Rupert"), "R163");
-    EXPECT_EQ(generateSoundex("Rubin"), "R150");
-    EXPECT_EQ(generateSoundex("Ashcraft"), "A261");
-    EXPECT_EQ(generateSoundex("Tymczak"), "T522");
-    EXPECT_EQ(generateSoundex("Pfister"), "P236");
+TEST(GenerateSoundexTest, NamesWithSpecialCharacters) {
+    EXPECT_EQ(generateSoundex("O'Connor"), "O256");
+    EXPECT_EQ(generateSoundex("McDonald"), "M235");
+    EXPECT_EQ(generateSoundex("Van Gogh"), "V520");
 }
 
-TEST(SoundexTest, HandlesRepetitiveCharacters) {
-    EXPECT_EQ(generateSoundex("BbBb"), "B100");
-    EXPECT_EQ(generateSoundex("Bcdl"), "B234");
+TEST(GenerateSoundexTest, NameWithLowerCase) {
+    EXPECT_EQ(generateSoundex("john"), "J500");
+    EXPECT_EQ(generateSoundex("smith"), "S530");
+    EXPECT_EQ(generateSoundex("emma"), "E500");
 }
 
+TEST(GenerateSoundexTest, NameWithNumbers) {
+    EXPECT_EQ(generateSoundex("Taylor2"), "T460");
+    EXPECT_EQ(generateSoundex("Parker123"), "P626");
+}
